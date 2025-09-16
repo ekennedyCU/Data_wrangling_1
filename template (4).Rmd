@@ -5,6 +5,7 @@ output: github_document
 
 ```{r}
 library(tidyverse)
+library(readxl)
 ```
 
 lets import a dataset
@@ -55,3 +56,13 @@ pups_df =
   janitor::clean_names(pups_df)
 ```
 
+
+## OKay what about excel
+
+CSVs are really great but sometimes you get an excel file.
+
+
+```{r}
+mlb_df = 
+  read_excel(data_import_examples/mlb11.xlsx)
+```
