@@ -5,8 +5,6 @@ output: github_document
 
 ```{r}
 library(tidyverse)
-library(readxl)
-library(haven)
 ```
 
 Let's import the data sets.
@@ -16,7 +14,10 @@ litters_df =
   read_csv("data_import_examples/FAS_litters.csv", na = c("NA", ".", ""))
 litters_df = 
   janitor::clean_names(litters_df)
+```
 
+
+```{r}
 pups_df = 
   read_csv("data_import_examples/FAS_pups.csv", na = c("NA", ".", ""))
 pups_df = 
@@ -24,9 +25,95 @@ pups_df =
 ```
 
 
-## Se;ect
+## Select
 Select selects variable sfrom my dataframe 
 
 ```{r}
 select(litters_df, group, litter_number, gd0_weight)
+```
+
+```{r}
+select(litters_df, group:gd_of_birth)
+```
+
+
+Select by prefix
+
+```{r}
+select(litters_df, -group)
+select(litters_df, -group:gd_of_birth)
+```
+
+```{r}
+select(litters_df, group, starts_with("gd"))
+```
+
+Rearrage by selecting
+
+```{r}
+select(litters_df, starts_with("gd"), group)
+select(litters_df, litter_number, everything())
+
+relocate(litters_df, litter_number)
+```
+
+rename by selecting
+
+```{r}
+select(litters_df, GROUP = group, everything())
+rename(litters_df, GROUP = group)
+```
+
+what if I only sleect one variable
+
+```{r}
+select(litters_df, group)
+
+pull(litters_df, group)
+```
+
+We hardly ever pull something out of the data fram3^^^
+
+```{r}
+select(pups_df, everything())
+```
+
+
+##mutate
+
+Use mutation to create or modify variables
+
+```{r}
+mutate(
+  litters_df, 
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+```
+
+```{r}
+select(litters_df, everything())
+```
+
+
+##arrange
+
+arrange arranges things Desc() - puts in opposite order
+
+```{r}
+arrange(litters_df, pups_born_alive)
+arrange(litters_df, group, pups_born_alive)
+```
+
+## PIPES
+
+```{r}
+litters_df = 
+  read_csv("data_import_examples/FAS_litters.csv", na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  select(group, litter_number, starts_with("gd")) |> 
+  drop_na() |> 
+  mutate(
+    wt_gain = gd18_weight - gd0_weight
+  )
 ```
